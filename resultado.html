@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resultado Financeiro</title>
+    <link rel="stylesheet" href="resultado.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <main class="painel-resultado">
+      <section class="painel-texto" id="painelTexto"></section>
+      <section class="painel-grafico">
+        <canvas id="grafico"></canvas>
+      </section>
+    </main>
+
+    <script>
+      const dados = JSON.parse(localStorage.getItem("dadosFinanceiros"));
+      if (!dados) {
+        window.location.href = "index2.html";
+      }
+
+      const {
+        salario,
+        luz,
+        alimentacao,
+        agua,
+        transporte,
+        gastosPersonalizados,
+        saldo,
+      } = dados;
+      const totalGastosPersonalizados = gastosPersonalizados.reduce(
+        (acc, gasto) => acc + gasto.valor,
+        0
+      );
+      const total =
+        luz + alimentacao + agua + transporte + totalGastosPersonalizados;
+
+      const painelTexto = document.getElementById("painelTexto");
+      painelTexto.innerHTML = `
+      <h1>📊 Resultado Financeiro</h1>
+      <p><strong>Salário:</strong> R$ ${salario.toFixed(2)}</p>
+      <p><strong>Total de Gastos:</strong> R$ ${total.toFixed(2)}</p>
+      <p><strong>Saldo:</strong> 
+        <span style="color: ${saldo >= 0 ? "#0f0" : "#f00"};">
+          R$ ${saldo.toFixed(2)}
+        </span>
+      </p>
+      <button onclick="window.location.href='index2.html'">⬅️ Voltar</button>
+    `;
+
+      // Gráfico
+      const ctx = document.getElementById("grafico").getContext("2d");
+      new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: [
+            "Luz",
+            "Alimentação",
+            "Água",
+            "Transporte",
+            "outros",
+          ],
+          datasets: [
+            {
+              data: [
+                luz,
+                alimentacao,
+                agua,
+                transporte,
+                totalGastosPersonalizados,
+                saldo > 0 ? saldo : 0,
+              ],
+              backgroundColor: [
+                "#ffcc00",
+                "#00ff99",
+                "#0099ff",
+                "#ff6666",
+                "#cc66ff",
+                "#00ffff",
+              ],
+              borderColor: "#111",
+              borderWidth: 2,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            legend: {
+              labels: {
+                color: "#fff",
+                font: { size: 14 },
+              },
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

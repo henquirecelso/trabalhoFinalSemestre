@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel de Login e Cadastro</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>💼 Painel de Acesso</h1>
+
+      <div class="tabs">
+        <button id="loginTab" class="active">Login</button>
+        <button id="cadastroTab">Cadastro</button>
+      </div>
+
+      <div id="mensagem" class="mensagem"></div>
+
+      <form id="loginForm" class="form ativo">
+        <label for="usuario">Usuário</label>
+        <input
+          type="text"
+          name="usuario"
+          id="usuarioLogin"
+          placeholder="Digite seu usuário"
+        />
+
+        <label for="senha">Senha</label>
+        <input
+          type="password"
+          name="senha"
+          id="senhaLogin"
+          placeholder="Digite sua senha"
+        />
+
+        <button type="submit" class="btn">Entrar</button>
+      </form>
+
+      <form id="cadastroForm" class="form">
+        <label for="novoUsuario">Novo Usuário</label>
+        <input type="text" id="novoUsuario" placeholder="Crie seu usuário" />
+
+        <label for="novaSenha">Nova Senha</label>
+        <input type="password" id="novaSenha" placeholder="Crie sua senha" />
+
+        <button type="button" id="cadastrar" class="btn">Cadastrar</button>
+      </form>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
