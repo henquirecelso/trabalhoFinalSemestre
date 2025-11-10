@@ -1,0 +1,125 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+}
+
+.container {
+  background-color: #111;
+  border: 2px solid #00ffff;
+  border-radius: 12px;
+  padding: 30px 40px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 0 15px #00ffff;
+  transition: 0.3s;
+}
+
+h1 {
+  color: #00ffff;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 16px;
+  padding: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-bottom: 2px solid transparent;
+}
+
+.tabs button.active {
+  color: #00ffff;
+  border-bottom: 2px solid #00ffff;
+}
+
+.form {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.form.ativo {
+  display: flex;
+}
+
+label {
+  text-align: left;
+  width: 100%;
+  font-weight: bold;
+  font-size: 14px;
+  color: #ccc;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: #222;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #00ffff;
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background-color: #00cccc;
+}
+.mensagem {
+  margin-bottom: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  display: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.mensagem.sucesso {
+  background-color: #00ff99;
+  color: #000;
+  border: 2px solid #00cc66;
+}
+
+.mensagem.erro {
+  background-color: #ff6666;
+  color: #fff;
+  border: 2px solid #cc0000;
+}
+
+.mensagem.aviso {
+  background-color: #ffcc00;
+  color: #000;
+  border: 2px solid #cc9900;
+}
