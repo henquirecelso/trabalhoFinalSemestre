@@ -11,13 +11,12 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  background-size: 
- 
+  
 }
 
 .container {
-  background-color: #08237ec7;
-  border: 2px solid #e2d3de;
+  background-color: #3c486bc7;
+  border: 2px solid #02e4e4;
   border-radius: 12px;
   padding: 30px 40px;
   width: 350px;
