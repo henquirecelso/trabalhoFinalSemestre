@@ -3,10 +3,11 @@ body {
   font-family: "Poppins", sans-serif;
   display: flex;
   min-height: 100vh;
-  background-color: #000;
+  background-color: #000000;
   color: #fff;
   overflow-x: hidden; 
   box-sizing: border-box;
+  
 }
 
 .sidebar {
@@ -15,7 +16,7 @@ body {
   top: 0;
   bottom: 0;
   width: 250px;
-  background-color: #111;
+  background-color: #111111;
   border-right: 2px solid #00ffff;
   padding: 20px 15px;
   display: flex;
@@ -301,7 +302,6 @@ canvas {
   gap: 10px;
 }
 
-/* ===== RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
   body {
     flex-direction: column;

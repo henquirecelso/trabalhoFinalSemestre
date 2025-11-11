@@ -10,24 +10,24 @@
   <body>
     <aside class="sidebar" id="sidebar">
       <div class="menu-top">
-        <h2 class="menu-titulo">💰 Meu Painel</h2>
+        <h2 class="menu-titulo"> Meu Painel</h2>
         <button id="toggleMenu" class="toggle-btn" aria-label="Alternar menu">⬅️</button>
       </div>
 
       <nav aria-label="Menu principal" class="menu-nav">
-        <button class="menu-item ativo" id="btnDashboard">📊 <span>Dashboard</span></button>
-        <button class="menu-item" id="btnTransacoes">💸 <span>Transações</span></button>
+        <button class="menu-item ativo" id="btnDashboard"> <span>Dashboard</span></button>
+        <button class="menu-item" id="btnTransacoes"> <span>Transações</span></button>
       </nav>
 
       <button onclick="window.location.href='cadastro.html'" id="logoutBtn" class="logout-btn">
-        🚪 <span>Sair</span>
+         <span>Sair</span>
       </button>
     </aside>
 
     <main class="main-content" id="mainContent">
       <section class="sec-dashboard" id="secDashboard">
         <header>
-          <h1>Bem-vindo, <span id="usuario">Usuário</span> 👋</h1>
+          <h1>Bem-vindo, <span id="usuario">Usuário</span> </h1>
           <button id="abrirPopup" class="btn">+ Nova movimentação</button>
         </header>
 
@@ -38,12 +38,12 @@
 
         <section class="graficos">
           <div class="grafico-box grafico-historico">
-            <h3>📈 Histórico de Ganhos</h3>
+            <h3> Histórico de Ganhos</h3>
             <canvas id="graficoLinha"></canvas>
           </div>
 
           <div class="grafico-box">
-            <h3>📊 Distribuição de Movimentações</h3>
+            <h3> Distribuição de Movimentações</h3>
             <canvas id="graficoPizza"></canvas>
           </div>
         </section>

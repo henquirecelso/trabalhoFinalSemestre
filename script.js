@@ -94,9 +94,9 @@ document.getElementById("voltarDashboard").addEventListener("click", () => {
   btnTransacoes.classList.remove("ativo");
 });
 
-const toggleMenu = document.getElementById("toggleMenu");
-const sidebar = document.getElementById("sidebar");
-toggleMenu.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
+// const toggleMenu = document.getElementById("toggleMenu");
+// const sidebar = document.getElementById("sidebar");
+// toggleMenu.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
 
 const ctxLinha = document.getElementById("graficoLinha").getContext("2d");
 const ctxPizza = document.getElementById("graficoPizza").getContext("2d");
