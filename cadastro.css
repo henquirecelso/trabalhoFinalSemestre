@@ -4,19 +4,24 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #000;
+  background-color: #000000;
   font-family: 'Poppins', sans-serif;
   color: #fff;
+  background-image: url(imgs/2825704.gif);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  
 }
 
 .container {
-  background-color: #111;
-  border: 2px solid #00ffff;
+  background-color: #3c486bc7;
+  border: 2px solid #02e4e4;
   border-radius: 12px;
   padding: 30px 40px;
   width: 350px;
   text-align: center;
-  box-shadow: 0 0 15px #00ffff;
+  box-shadow: 0 0 15px #02dee6;
   transition: 0.3s;
 }
 

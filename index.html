@@ -1,88 +1,101 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Painel Financeiro</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  </head>
-  <body>
-    <aside class="sidebar" id="sidebar">
-      <div class="menu-top">
-        <h2 class="menu-titulo">💰 Meu Painel</h2>
-        <button id="toggleMenu" class="toggle-btn" aria-label="Alternar menu">⬅️</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Financeiro</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="logo"> Controle de Finanças</div>
+    <nav class="nav-top">
+      <button id="btnDashboard" class="nav-btn ativo">Dashboard</button>
+      <button id="btnTransacoes" class="nav-btn">Transações</button>
+      <button id="logoutBtn" class="logout-btn">Sair</button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+
+    <section id="secDashboard" class="fade-section ativo">
+      <div class="header-section">
       </div>
 
-      <nav aria-label="Menu principal" class="menu-nav">
-        <button class="menu-item ativo" id="btnDashboard">📊 <span>Dashboard</span></button>
-        <button class="menu-item" id="btnTransacoes">💸 <span>Transações</span></button>
-      </nav>
+      <div class="saldo-card">
+        <h2>Saldo Atual</h2>
+        <p id="saldo">R$ 0,00</p>
+      </div>
 
-      <button onclick="window.location.href='cadastro.html'" id="logoutBtn" class="logout-btn">
-        🚪 <span>Sair</span>
-      </button>
-    </aside>
+      <div class="graficos">
+        <div class="grafico-box">
+          <h3>Fluxo Diário</h3>
+          <canvas id="graficoLinha"></canvas>
+        </div>
 
-    <main class="main-content" id="mainContent">
-      <section class="sec-dashboard" id="secDashboard">
-        <header>
-          <h1>Bem-vindo, <span id="usuario">Usuário</span> 👋</h1>
-          <button id="abrirPopup" class="btn">+ Nova movimentação</button>
-        </header>
-
-        <section class="saldo">
-          <h2>Saldo Atual:</h2>
-          <p id="saldo">R$ 0,00</p>
-        </section>
-
-        <section class="graficos">
-          <div class="grafico-box grafico-historico">
-            <h3>📈 Histórico de Ganhos</h3>
-            <canvas id="graficoLinha"></canvas>
-          </div>
-
-          <div class="grafico-box">
-            <h3>📊 Distribuição de Movimentações</h3>
-            <canvas id="graficoPizza"></canvas>
-          </div>
-        </section>
-      </section>
-
-      <section class="sec-transacoes" id="secTransacoes" style="display: none;">
-        <header>
-          <h2>Movimentos Recentes</h2>
-          <button id="voltarDashboard" class="btn">⬅ Voltar</button>
-        </header>
-        <div id="cardsMovimentos" class="cards-container"></div>
-      </section>
-    </main>
-
-    <div id="popup" class="popup" role="dialog" aria-modal="true">
-      <div class="popup-content">
-        <h2>Nova Movimentação</h2>
-
-        <label for="tipoAcao">Tipo</label>
-        <select id="tipoAcao">
-          <option value="">Selecione o tipo</option>
-          <option value="entrada">Entrada</option>
-          <option value="saida">Saída</option>
-          <option value="rendaExtra">Renda Extra</option>
-        </select>
-
-        <label for="nomeMov">Descrição</label>
-        <input type="text" id="nomeMov" placeholder="Descrição da movimentação" />
-
-        <label for="valorMov">Valor (R$)</label>
-        <input type="number" id="valorMov" placeholder="Ex: 200" />
-
-        <div class="botoes-popup">
-          <button id="salvarMov" class="btn">Salvar</button>
-          <button id="fecharPopup" class="btn cancelar">Cancelar</button>
+        <div class="grafico-box">
+          <h3>Resumo Mensal</h3>
+          <canvas id="graficoPizza"></canvas>
         </div>
       </div>
-    </div>
 
-    <script src="script.js"></script>
-  </body>
+      <div class="cards-infos">
+        <div class="info-card entrada">
+          <h3>Entrada Total</h3>
+          <p id="maiorEntrada">R$ 0,00</p>
+        </div>
+        <div class="info-card saida">
+          <h3>Saída total</h3>
+          <p id="maiorSaida">R$ 0,00</p>
+        </div>
+        <div class="info-card rendaExtra">
+          <h3>Débito</h3>
+          <p id="debito">R$ 0,00</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="secTransacoes" class="fade-section">
+      <div class="header-section">
+        <h1>Minhas Transações</h1>
+      </div>
+      <div id="cardsMovimentos"></div>
+    </section>
+  </main>
+
+  <button id="abrirPopup" class="botao-flutuante">＋</button>
+
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      <h2>Nova Movimentação</h2>
+
+      <div class="tipo-opcoes">
+        <button class="tipo-btn ativo" data-tipo="entrada"> Entrada</button>
+        <button class="tipo-btn" data-tipo="saida"> Saída</button>
+        <button class="tipo-btn" data-tipo="rendaExtra"> Renda Extra</button>
+      </div>
+
+      <input type="hidden" id="tipoAcao" value="entrada" />
+
+      <div class="input-group">
+        <label for="nomeMov">Nome</label>
+        <input type="text" id="nomeMov" placeholder="Ex: Salário, Mercado, Bônus..." required />
+      </div>
+
+      <div class="input-group">
+        <label for="valorMov">Valor (R$)</label>
+        <input type="number" id="valorMov" placeholder="0,00" min="0" step="0.01" required />
+      </div>
+
+      <div class="botoes-popup">
+        <button class="btn cancelar" id="fecharPopup">Cancelar</button>
+        <button class="btn confirmar" id="salvarMov">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
 </html>
