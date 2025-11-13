@@ -23,14 +23,14 @@ document.getElementById("cadastrar").addEventListener("click", () => {
   const senha = document.getElementById("novaSenha").value.trim();
 
   if (!usuario || !senha) {
-    mostrarMensagem("⚠️ Preencha todos os campos.", "erro");
+    mostrarMensagem("Preencha todos os campos.", "erro");
     return;
   }
 
   const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
   if (usuarios.find((u) => u.usuario === usuario)) {
-    mostrarMensagem("❌ Usuário já existe!", "erro");
+    mostrarMensagem("Usuário já existe!", "erro");
     return;
   }
 
@@ -42,7 +42,7 @@ usuarios.push({
 });
 localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
-mostrarMensagem("✅ Cadastro realizado com sucesso!");
+mostrarMensagem("Cadastro realizado com sucesso!");
 
 document.getElementById("novoUsuario").value = "";
 document.getElementById("novaSenha").value = "";
@@ -69,12 +69,12 @@ loginForm.addEventListener("submit", (e) => {
   if (encontrado) { 
     localStorage.setItem("usuarioLogado", JSON.stringify(encontrado));
 
-    mostrarMensagem("✅ Login bem-sucedido! Redirecionando...", "sucesso");
+    mostrarMensagem("Login bem-sucedido! Redirecionando...", "sucesso");
     setTimeout(() => {
       window.location.href = "index.html"; 
     }, 1000);
   } else {
-    mostrarMensagem("❌ Usuário ou senha incorretos.", "erro");
+    mostrarMensagem("Usuário ou senha incorretos.", "erro");
   }
 });
 
