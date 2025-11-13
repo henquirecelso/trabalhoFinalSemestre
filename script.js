@@ -3,8 +3,14 @@ if (!usuarioLogado) window.location.href = "cadastro.html";
 if (usuarioLogado.saldo === undefined) usuarioLogado.saldo = 0;
 if (!Array.isArray(usuarioLogado.movimentacoes)) usuarioLogado.movimentacoes = [];
 
+const metaValorEl = document.getElementById("metaValor");
+const secMetas = document.getElementById("secMetas");
+const btnMetas = document.getElementById("btnMetas");
+const btnSalvarMeta = document.getElementById("salvarMeta");
+const inputValorMeta = document.getElementById("valorMeta");
+if (usuarioLogado.meta === undefined) usuarioLogado.meta = 0;
 const saldoEl = document.getElementById("saldo");
-const cardsContainer = document.getElementById("cardsMovimentos");
+// const cardsContainer = document.getElementById("cardsMovimentos");
 const popup = document.getElementById("popup");
 const tipoBtns = document.querySelectorAll(".tipo-btn");
 const tipoAcaoInput = document.getElementById("tipoAcao");
@@ -18,6 +24,24 @@ const secDashboard = document.getElementById("secDashboard");
 const secTransacoes = document.getElementById("secTransacoes");
 const inputNomeMov = document.getElementById("nomeMov");
 const inputValorMov = document.getElementById("valorMov");
+
+
+function mostrarMensagem(pertoDoElemento, texto, tipo = "info") {
+  const msg = document.createElement("div");
+  msg.className = `msg ${tipo}`;
+  msg.textContent = texto;
+
+  const antigas = pertoDoElemento.parentElement.querySelectorAll(".msg");
+  antigas.forEach(el => el.remove());
+
+  pertoDoElemento.parentElement.appendChild(msg);
+
+  setTimeout(() => {
+    msg.style.opacity = 0;
+    msg.style.transform = "translateY(-10px)";
+    setTimeout(() => msg.remove(), 500);
+  }, 3000);
+}
 
 function abrirPopup() {
   popup.style.display = "flex";
@@ -59,13 +83,14 @@ tipoBtns.forEach((btn) => {
   });
 });
 
+
 btnSalvarMov.addEventListener("click", () => {
   const tipo = tipoAcaoInput.value;
   const descricao = inputNomeMov.value.trim();
   const valor = parseFloat(inputValorMov.value);
 
   if (!tipo || !descricao || isNaN(valor)) {
-    alert("Preencha todos os campos corretamente!");
+mostrarMensagem(btnSalvarMov, "Preencha todos os campos corretamente!", "erro");
     return;
   }
 
@@ -91,6 +116,7 @@ btnSalvarMov.addEventListener("click", () => {
   inputNomeMov.value = "";
   inputValorMov.value = "";
 });
+
 
 const ctxLinha = document.getElementById("graficoLinha").getContext("2d");
 const ctxPizza = document.getElementById("graficoPizza").getContext("2d");
@@ -159,9 +185,38 @@ function atualizarDashboard() {
 
   document.getElementById("maiorEntrada").textContent = `R$ ${totalEntrada.toFixed(2).replace('.', ',')}`;
   document.getElementById("maiorSaida").textContent = `R$ ${totalSaida.toFixed(2).replace('.', ',')}`;
-  document.getElementById("debito").textContent = `R$ ${debito.toFixed(2).replace('.', ',')}`;
+if (usuarioLogado.meta > 0) {
+  const progresso = Math.min((usuarioLogado.saldo / usuarioLogado.meta) * 100, 100);
 
-  cardsContainer.innerHTML = "";
+  if (!metaValorEl.querySelector(".progresso-barra")) {
+    metaValorEl.innerHTML = `
+      <p>0% da meta</p>
+      <div class="progresso-barra"><div class="preenchimento"></div></div>
+    `;
+  }
+
+  const preenchimento = metaValorEl.querySelector(".preenchimento");
+  const p = metaValorEl.querySelector("p");
+  preenchimento.style.width = `${progresso}%`;
+
+  if (progresso >= 100) {
+    metaValorEl.innerHTML = `
+      <p class="meta-atingida">🎉 Meta atingida! 🎉</p>
+      <div class="progresso-barra"><div class="preenchimento" style="width:100%"></div></div>
+    `;
+  } else {
+    p.textContent = `${progresso.toFixed(1)}% da meta`;
+  }
+} else {
+  metaValorEl.innerHTML = `
+    <p>Faça sua meta!</p>
+    <div class="progresso-barra"><div class="preenchimento"></div></div>
+  `;
+}
+
+
+
+  // cardsContainer.innerHTML = "";
   usuarioLogado.movimentacoes
     .sort((a, b) => new Date(b.data) - new Date(a.data))
     .forEach(mov => {
@@ -173,7 +228,7 @@ function atualizarDashboard() {
         <p>R$ ${mov.valor.toFixed(2).replace('.', ',')}</p>
         <small>${new Date(mov.data).toLocaleDateString('pt-BR')}</small>
       `;
-      cardsContainer.appendChild(card);
+      // cardsContainer.appendChild(card);
     });
 
   const diasDoMes = Array.from({ length: 31 }, (_, i) => i + 1);
@@ -189,14 +244,56 @@ function atualizarDashboard() {
   graficoLinha.data.labels = diasDoMes;
   graficoLinha.data.datasets[0].data = entradasDiarias;
   graficoLinha.data.datasets[1].data = saidasDiarias;
+
+  const tabelaCorpo = document.getElementById("tabelaCorpo");
+tabelaCorpo.innerHTML = "";
+usuarioLogado.movimentacoes
+  .sort((a, b) => new Date(b.data) - new Date(a.data))
+  .forEach(m => {
+    const tr = document.createElement("tr");
+    const data = new Date(m.data);
+    const dia = data.toLocaleDateString("pt-BR");
+    const hora = data.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
+    tr.innerHTML = `
+      <td>${dia}</td>
+      <td>${hora}</td>
+      <td>${m.descricao}</td>
+      <td class="${m.tipo}">${m.tipo === 'entrada' ? 'Entrada' :
+                             m.tipo === 'saida' ? 'Saída' : 'Renda Extra'}</td>
+      <td class="${m.tipo}">R$ ${m.valor.toFixed(2).replace('.', ',')}</td>
+    `;
+    tabelaCorpo.appendChild(tr);
+  });
+
   graficoLinha.update();
 
   graficoPizza.data.datasets[0].data = [totalEntrada, totalSaida, usuarioLogado.movimentacoes
     .filter(m => m.tipo === 'rendaExtra')
     .reduce((acc, cur) => acc + cur.valor, 0)];
   graficoPizza.update();
+
+  
 }
 
+btnSalvarMeta.addEventListener("click", () => {
+  const valor = parseFloat(inputValorMeta.value);
+  if (isNaN(valor) || valor <= 0) {
+    mostrarMensagem(btnSalvarMeta, "Informe um valor válido para a meta!");
+    return;
+  }
+
+  usuarioLogado.meta = valor;
+  localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+
+  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+  usuarios = usuarios.map(u => (u.email === usuarioLogado.email ? usuarioLogado : u));
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+mostrarMensagem(btnSalvarMeta, "Meta salva com sucesso!", "sucesso");
+  inputValorMeta.value = "";
+  atualizarDashboard();
+});
 
 
 function mostrarSecao(secAtiva, btnAtivo, secInativa, btnInativo) {
@@ -206,8 +303,30 @@ function mostrarSecao(secAtiva, btnAtivo, secInativa, btnInativo) {
   btnInativo.classList.remove("ativo");
 }
 
-btnDashboard.addEventListener("click", () => mostrarSecao(secDashboard, btnDashboard, secTransacoes, btnTransacoes));
-btnTransacoes.addEventListener("click", () => mostrarSecao(secTransacoes, btnTransacoes, secDashboard, btnDashboard));
+function mostrarApenas(secao) {
+  [secDashboard, secTransacoes, secMetas].forEach(s => s.classList.remove("ativo"));
+  secao.classList.add("ativo");
+}
+
+function ativarBotao(botao) {
+  [btnDashboard, btnTransacoes, btnMetas].forEach(b => b.classList.remove("ativo"));
+  botao.classList.add("ativo");
+}
+
+btnDashboard.addEventListener("click", () => {
+  mostrarApenas(secDashboard);
+  ativarBotao(btnDashboard);
+});
+
+btnTransacoes.addEventListener("click", () => {
+  mostrarApenas(secTransacoes);
+  ativarBotao(btnTransacoes);
+});
+
+btnMetas.addEventListener("click", () => {
+  mostrarApenas(secMetas);
+  ativarBotao(btnMetas);
+});
 
 btnLogout.addEventListener("click", () => {
   localStorage.removeItem("usuarioLogado");

@@ -1,11 +1,9 @@
-// cadastro.js
 const loginTab = document.getElementById("loginTab");
 const cadastroTab = document.getElementById("cadastroTab");
 const loginForm = document.getElementById("loginForm");
 const cadastroForm = document.getElementById("cadastroForm");
 const mensagem = document.getElementById("mensagem");
 
-// Troca entre abas
 loginTab.addEventListener("click", () => {
   loginTab.classList.add("active");
   cadastroTab.classList.remove("active");
@@ -20,7 +18,6 @@ cadastroTab.addEventListener("click", () => {
   loginForm.classList.remove("ativo");
 });
 
-// Cadastrar novo usuário
 document.getElementById("cadastrar").addEventListener("click", () => {
   const usuario = document.getElementById("novoUsuario").value.trim();
   const senha = document.getElementById("novaSenha").value.trim();
@@ -40,18 +37,16 @@ document.getElementById("cadastrar").addEventListener("click", () => {
 usuarios.push({
   usuario,
   senha,
-  saldo: 0, // saldo inicial
-  movimentacoes: [] // lista de entradas/saídas
+  saldo: 0, 
+  movimentacoes: [] 
 });
 localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
 mostrarMensagem("✅ Cadastro realizado com sucesso!");
 
-// Limpa os campos
 document.getElementById("novoUsuario").value = "";
 document.getElementById("novaSenha").value = "";
 
-// Após 1,5s, volta automaticamente para o login
 setTimeout(() => {
   cadastroTab.classList.remove("active");
   loginTab.classList.add("active");
@@ -61,7 +56,6 @@ setTimeout(() => {
 
 });
 
-// Fazer login
 loginForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const usuario = document.getElementById("usuarioLogin").value.trim();
@@ -73,12 +67,11 @@ loginForm.addEventListener("submit", (e) => {
   );
 
   if (encontrado) { 
-    // ✅ Salva nome do usuário logado
     localStorage.setItem("usuarioLogado", JSON.stringify(encontrado));
 
     mostrarMensagem("✅ Login bem-sucedido! Redirecionando...", "sucesso");
     setTimeout(() => {
-      window.location.href = "index.html"; // Redireciona ao painel principal
+      window.location.href = "index.html"; 
     }, 1000);
   } else {
     mostrarMensagem("❌ Usuário ou senha incorretos.", "erro");

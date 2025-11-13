@@ -1,101 +1,149 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel Financeiro</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel Financeiro</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
 
-<body>
-  <header class="topbar">
-    <div class="logo"> Controle de Finanças</div>
-    <nav class="nav-top">
-      <button id="btnDashboard" class="nav-btn ativo">Dashboard</button>
-      <button id="btnTransacoes" class="nav-btn">Transações</button>
-      <button id="logoutBtn" class="logout-btn">Sair</button>
-    </nav>
-  </header>
+  <body>
+    <header class="topbar">
+      <div class="logo">Controle de Finanças</div>
+      <nav class="nav-top">
+        <button id="btnDashboard" class="nav-btn ativo">Dashboard</button>
+        <button id="btnTransacoes" class="nav-btn">Transações</button>
+        <button id="btnMetas" class="nav-btn">Metas</button>
+        <button id="logoutBtn" class="logout-btn">Sair</button>
+      </nav>
+    </header>
 
-  <main class="main-content">
+    <main class="main-content">
+      <div id="mensagem" class="mensagem"></div>
 
-    <section id="secDashboard" class="fade-section ativo">
-      <div class="header-section">
-      </div>
+      <section id="secDashboard" class="fade-section ativo">
+        <div class="header-section"></div>
 
-      <div class="saldo-card">
-        <h2>Saldo Atual</h2>
-        <p id="saldo">R$ 0,00</p>
-      </div>
-
-      <div class="graficos">
-        <div class="grafico-box">
-          <h3>Fluxo Diário</h3>
-          <canvas id="graficoLinha"></canvas>
+        <div class="saldo-card">
+          <h2>Saldo Atual</h2>
+          <p id="saldo">R$ 0,00</p>
         </div>
 
-        <div class="grafico-box">
-          <h3>Resumo Mensal</h3>
-          <canvas id="graficoPizza"></canvas>
+        <div class="graficos">
+          <div class="grafico-box">
+            <h3>Fluxo Diário</h3>
+            <canvas id="graficoLinha"></canvas>
+          </div>
+
+          <div class="grafico-box">
+            <h3>Resumo Mensal</h3>
+            <canvas id="graficoPizza"></canvas>
+          </div>
         </div>
-      </div>
 
-      <div class="cards-infos">
-        <div class="info-card entrada">
-          <h3>Entrada Total</h3>
-          <p id="maiorEntrada">R$ 0,00</p>
+        <div class="cards-infos">
+          <div class="info-card entrada">
+            <h3>Entrada Total</h3>
+            <p id="maiorEntrada">R$ 0,00</p>
+          </div>
+          <div class="info-card saida">
+            <h3>Saída total</h3>
+            <p id="maiorSaida">R$ 0,00</p>
+          </div>
+          <div class="info-card rendaExtra">
+            <h3>Meta Financeira</h3>
+            <div id="metaValor">
+              <p>Faça sua meta!</p>
+              <div class="progresso-barra">
+                <div class="preenchimento"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="info-card saida">
-          <h3>Saída total</h3>
-          <p id="maiorSaida">R$ 0,00</p>
+      </section>
+
+      <section id="secTransacoes" class="fade-section">
+        <div class="header-section">
+          <h2>Extrato Financeiro</h2>
         </div>
-        <div class="info-card rendaExtra">
-          <h3>Débito</h3>
-          <p id="debito">R$ 0,00</p>
+        <table id="tabelaExtrato">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Horário</th>
+              <th>Descrição</th>
+              <th>Tipo</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaCorpo"></tbody>
+        </table>
+      </section>
+
+      <section id="secMetas" class="fade-section">
+        <div class="header-section"></div>
+
+        <div class="meta-container">
+          <h3>Defina sua meta financeira</h3>
+          <div class="input-group">
+            <label for="valorMeta">Valor da Meta (R$)</label>
+            <input
+              type="number"
+              id="valorMeta"
+              placeholder="Ex: 5000"
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <button class="btn confirmar" id="salvarMeta">Salvar Meta</button>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
-    <section id="secTransacoes" class="fade-section">
-      <div class="header-section">
-        <h1>Minhas Transações</h1>
-      </div>
-      <div id="cardsMovimentos"></div>
-    </section>
-  </main>
+    <button id="abrirPopup" class="botao-flutuante">＋</button>
 
-  <button id="abrirPopup" class="botao-flutuante">＋</button>
+    <div class="popup" id="popup">
+      <div class="popup-content">
+        <h2>Nova Movimentação</h2>
 
-  <div class="popup" id="popup">
-    <div class="popup-content">
-      <h2>Nova Movimentação</h2>
+        <div class="tipo-opcoes">
+          <button class="tipo-btn ativo" data-tipo="entrada">Entrada</button>
+          <button class="tipo-btn" data-tipo="saida">Saída</button>
+          <button class="tipo-btn" data-tipo="rendaExtra">Renda Extra</button>
+        </div>
 
-      <div class="tipo-opcoes">
-        <button class="tipo-btn ativo" data-tipo="entrada"> Entrada</button>
-        <button class="tipo-btn" data-tipo="saida"> Saída</button>
-        <button class="tipo-btn" data-tipo="rendaExtra"> Renda Extra</button>
-      </div>
+        <input type="hidden" id="tipoAcao" value="entrada" />
 
-      <input type="hidden" id="tipoAcao" value="entrada" />
+        <div class="input-group">
+          <label for="nomeMov">Nome</label>
+          <input
+            type="text"
+            id="nomeMov"
+            placeholder="Ex: Salário, Mercado, Bônus..."
+            required
+          />
+        </div>
 
-      <div class="input-group">
-        <label for="nomeMov">Nome</label>
-        <input type="text" id="nomeMov" placeholder="Ex: Salário, Mercado, Bônus..." required />
-      </div>
+        <div class="input-group">
+          <label for="valorMov">Valor (R$)</label>
+          <input
+            type="number"
+            id="valorMov"
+            placeholder="0,00"
+            min="0"
+            step="0.01"
+            required
+          />
+        </div>
 
-      <div class="input-group">
-        <label for="valorMov">Valor (R$)</label>
-        <input type="number" id="valorMov" placeholder="0,00" min="0" step="0.01" required />
-      </div>
-
-      <div class="botoes-popup">
-        <button class="btn cancelar" id="fecharPopup">Cancelar</button>
-        <button class="btn confirmar" id="salvarMov">Salvar</button>
+        <div class="botoes-popup">
+          <button class="btn cancelar" id="fecharPopup">Cancelar</button>
+          <button class="btn confirmar" id="salvarMov">Salvar</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
