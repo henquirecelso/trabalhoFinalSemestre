@@ -73,7 +73,7 @@ loginForm.addEventListener("submit", (e) => {
   );
 
   if (encontrado) { 
-    // ✅ Salva nome do usuário logado
+    //  Salva nome do usuário logado
     localStorage.setItem("usuarioLogado", JSON.stringify(encontrado));
 
     mostrarMensagem("✅ Login bem-sucedido! Redirecionando...", "sucesso");
