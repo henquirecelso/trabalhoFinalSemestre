@@ -10,13 +10,12 @@ const btnSalvarMeta = document.getElementById("salvarMeta");
 const inputValorMeta = document.getElementById("valorMeta");
 if (usuarioLogado.meta === undefined) usuarioLogado.meta = 0;
 const saldoEl = document.getElementById("saldo");
-// const cardsContainer = document.getElementById("cardsMovimentos");
 const popup = document.getElementById("popup");
 const tipoBtns = document.querySelectorAll(".tipo-btn");
 const tipoAcaoInput = document.getElementById("tipoAcao");
 const btnAbrirPopup = document.getElementById("abrirPopup");
 const btnFecharPopup = document.getElementById("fecharPopup");
-const btnSalvarMov = document.getElementById("salvarMov");
+const btnSalvarMov = document.getElementById("salvarMov");    
 const btnDashboard = document.getElementById("btnDashboard");
 const btnTransacoes = document.getElementById("btnTransacoes");
 const btnLogout = document.getElementById("logoutBtn");
@@ -201,7 +200,7 @@ if (usuarioLogado.meta > 0) {
 
   if (progresso >= 100) {
     metaValorEl.innerHTML = `
-      <p class="meta-atingida">🎉 Meta atingida! 🎉</p>
+      <p class="meta-atingida"> Meta atingida! </p>
       <div class="progresso-barra"><div class="preenchimento" style="width:100%"></div></div>
     `;
   } else {

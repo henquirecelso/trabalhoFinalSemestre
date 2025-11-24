@@ -4,11 +4,12 @@ body {
   min-height: 100vh;
   background-color: #000;
   color: #fff;
-  background-image: url("imgs/1104840.jpg");
+  background-image: url("imgs/2825704.gif");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   box-sizing: border-box;
+  
 }
 
 #salvarMeta {
@@ -226,25 +227,18 @@ canvas {
 .info-card.entrada {
   border-color: #0f8a23ff;
   box-shadow: 0 0 20px #00ffff44;
-  align-self: flex-start;
-  
-
   animation: fadeSlideUp 1s ease forwards, pulseBorder 3s infinite ease-in-out, floatCard 4s ease-in-out infinite;
 }
 
 .info-card.saida {
   border-color: #ec1f1f;
   box-shadow: 0 0 20px #00baff44;
-  align-self: flex-end;
-  
   animation: fadeSlideUp 1s ease forwards, pulseBorder 3s infinite ease-in-out, floatCard 4s ease-in-out infinite;
 }
 .info-card.rendaExtra {
   border-color: #ffbf36;
   box-shadow: 0 0 20px #00baff44;
-  align-self: flex-end;
   animation: fadeSlideUp 1s ease forwards, pulseBorder 3s infinite ease-in-out, floatCard 4s ease-in-out infinite;
- 
 
 }
 
