@@ -97,6 +97,20 @@ body {
   flex-wrap: wrap;
 }
 
+h9 {
+  font-size: large;
+  font-family:'Times New Roman', Times, serif;
+  font-weight: bold;
+  padding: 10px 14px;
+  border: 1.5px solid #00eaff66;
+  border-radius: 8px;
+  background: #00000065;
+  color: #06e7f7;;
+  text-align: center;
+  display: flex;
+  margin: 0px auto;
+}
+
 h1 {
   color: #00eaff;
   font-size: 1.8rem;
@@ -122,12 +136,105 @@ h1 {
 }
 
 .btn.cancelar {
-  background-color: #ff4444;
+  background-color: #e4000080;
   color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: large;
+  border-radius: 15px;
 }
 
-.btn.cancelar:hover {
-  background-color: #cc0000;
+.btn.confirmar {
+  background-color: #278a19be;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: large;
+  border-radius: 15px;
+}
+
+
+/* Barra de pesquisa do Extrato */
+.barra-pesquisa {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+#campoPesquisa {
+  width: 100%;
+  max-width: 350px;
+  padding: 10px 14px;
+  border: 1.5px solid #00eaff66;
+  border-radius: 8px;
+  background: #0a1017;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s;
+  box-shadow: 0 0 12px #00eaff33;
+}
+
+#campoPesquisa:focus {
+  border-color: #00ffff;
+  box-shadow: 0 0 15px #00ffff88;
+}
+
+/* Melhorando tabela Extrato */
+#tabelaExtrato {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #0b111acc;
+  border: 1.5px solid #00eaff55;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 25px #00eaff33;
+}
+
+#tabelaExtrato th, #tabelaExtrato td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #00eaff33;
+}
+
+#tabelaExtrato th {
+  background-color: #00141d;
+  color: #00eaff;
+  text-shadow: 0 0 8px #00ffff66;
+}
+
+#tabelaExtrato tr:hover {
+  background-color: #00eaff11;
+}
+
+#tabelaExtrato .entrada { color: #00ff9d; font-weight: bold; }
+#tabelaExtrato .saida { color: #ff4a4a; font-weight: bold; }
+#tabelaExtrato .rendaExtra { color: #ffd54a; font-weight: bold; }
+
+@media (max-width: 650px) {
+  #tabelaExtrato thead {
+    display: none;
+  }
+
+  #tabelaExtrato tr {
+    display: block;
+    margin-bottom: 15px;
+    background: #0b111acc;
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  #tabelaExtrato td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border: none;
+  }
+
+  #tabelaExtrato td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #00eaff;
+  }
 }
 
 .saldo-card {
@@ -164,7 +271,7 @@ h1 {
 
 .graficos {
   display: flex;
-  gap: 20px;
+  gap: 25px;
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
@@ -173,7 +280,7 @@ h1 {
 .grafico-box {
   flex: 1 1 350px;
   max-width: 95%;
-  background-color: #0b0f18cc;
+  background-color: #000000;
   border: 2px solid #11dbff;
   border-radius: 12px;
   padding: 15px;
@@ -181,11 +288,16 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: transform 0.3s ease;
+}
+.grafico-box:hover {
+  transform: scale(1.02);
 }
 
 .grafico-box h3 {
   color: #00eaff;
   text-shadow: 0 0 10px #00ffff66;
+
 }
 
 canvas {
@@ -360,8 +472,10 @@ canvas {
 
 .botoes-popup {
   display: flex;
-  justify-content: space-between;
   margin-top: 20px;
+  justify-content: center;
+
+ 
 }
 
 .botoes-popup .btn {
@@ -457,7 +571,8 @@ canvas {
 .botao-flutuante:hover {
   transform: scale(1.1);
   box-shadow: 0 0 35px #00ffffcc;
-}
+} 
+
 .meta-container {
   background-color: #0b111aee;
   border: 2px solid #00eaff;
