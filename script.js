@@ -45,13 +45,11 @@ function mostrarMensagem(pertoDoElemento, texto, tipo = "info") {
   setTimeout(() => {
     msg.style.opacity = 0;
     msg.style.transform = "translateY(-10px)";
-    setTimeout(() => msg.remove(), 500);
+    setTimeout(() => msg.remove(), 1000);
   }, 3000);
 }
 
-/* ---------------------------------------------------
-   POPUP
-----------------------------------------------------*/
+
 function abrirPopup() {
   popup.style.display = "flex";
   popup.style.opacity = 0;
@@ -93,13 +91,12 @@ tipoBtns.forEach((btn) => {
   });
 });
 
-/* ---------------------------------------------------
-   SALVAR MOV
-----------------------------------------------------*/
+
 btnSalvarMov.addEventListener("click", () => {
   const tipo = tipoAcaoInput.value;
   const descricao = inputNomeMov.value.trim();
   const valor = parseFloat(inputValorMov.value);
+  const id = Date.now();
 
   if (!tipo || !descricao || isNaN(valor)) {
     mostrarMensagem(btnSalvarMov, "Preencha todos os campos corretamente!", "erro");
@@ -107,11 +104,13 @@ btnSalvarMov.addEventListener("click", () => {
   }
 
   usuarioLogado.movimentacoes.push({
+    id,
     tipo,
     descricao,
     valor,
     data: new Date().toISOString(),
   });
+
 
   if (tipo === "entrada" || tipo === "rendaExtra") usuarioLogado.saldo += valor;
   else if (tipo === "saida") usuarioLogado.saldo -= valor;
@@ -130,6 +129,64 @@ btnSalvarMov.addEventListener("click", () => {
   inputValorMov.value = "";
 });
 
+function editarMovimentacao(id){ 
+  usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+  const movimentacao = usuarioLogado.movimentacoes.find(m => m.id === id);
+  if (!movimentacao) return;
+
+  tipoAcaoInput.value = movimentacao.tipo;
+  inputNomeMov.value = movimentacao.descricao;
+  inputValorMov.value = movimentacao.valor;
+
+  abrirPopup();
+
+  // Listener temporário em capture para interceptar o clique de salvar e evitar a criação de nova movimentação
+  const salvarEdit = function(e) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+
+    const tipo = tipoAcaoInput.value;
+    const descricao = inputNomeMov.value.trim();
+    const valor = parseFloat(inputValorMov.value);
+
+    if (!tipo || !descricao || isNaN(valor)) {
+      mostrarMensagem(btnSalvarMov, "Preencha todos os campos corretamente!", "erro");
+      return;
+    }
+
+    // Substitui os valores do mesmo objeto
+    movimentacao.tipo = tipo;
+    movimentacao.descricao = descricao;
+    movimentacao.valor = valor;
+    movimentacao.data = new Date().toISOString();
+
+    // Recalcula o saldo a partir das movimentações (evita inconsistências)
+    usuarioLogado.saldo = usuarioLogado.movimentacoes.reduce((acc, m) => {
+      if (m.tipo === "entrada" || m.tipo === "rendaExtra") return acc + m.valor;
+      if (m.tipo === "saida") return acc - m.valor;
+      return acc;
+    }, 0);
+
+    localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    usuarios = usuarios.map(u => (u.email === usuarioLogado.email ? usuarioLogado : u));
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+    atualizarDashboard();
+    renderizarTabela(usuarioLogado.movimentacoes);
+
+    fecharPopup();
+    inputNomeMov.value = "";
+    inputValorMov.value = "";
+
+    // remove este listener após execução
+    btnSalvarMov.removeEventListener("click", salvarEdit, true);
+  };
+
+  btnSalvarMov.addEventListener("click", salvarEdit, { capture: true });
+}
+
+
 
 function renderizarTabela(lista) {
   tabelaCorpo.innerHTML = "";
@@ -138,6 +195,7 @@ function renderizarTabela(lista) {
     .sort((a, b) => new Date(b.data) - new Date(a.data))
     .forEach(m => {
       const tr = document.createElement("tr");
+      tr.setAttribute("data-id", m.id);
       const data = new Date(m.data);
       const dia = data.toLocaleDateString("pt-BR");
       const hora = data.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
@@ -149,6 +207,16 @@ function renderizarTabela(lista) {
         <td class="${m.tipo}">${m.tipo === 'entrada' ? 'Entrada' :
                                m.tipo === 'saida' ? 'Saída' : 'Renda Extra'}</td>
         <td class="${m.tipo}">R$ ${m.valor.toFixed(2).replace('.', ',')}</td>
+          <td>
+          <button class="btn-editar" onclick="editarMovimentacao(${m.id})">
+          Editar
+          </button>
+         </td>
+         <td>
+           <button class="btn-excluir" onclick="excluirMovimentacao(${m.id})">
+             Excluir
+           </button>
+         </td>
       `;
 
       tabelaCorpo.appendChild(tr);
@@ -229,8 +297,52 @@ function atualizarDashboard() {
     usuarioLogado.movimentacoes.filter(m => m.tipo === "rendaExtra").reduce((a, b) => a + b.valor, 0)
   ];
   graficoPizza.update();
+
+  // Atualiza exibição da meta (valor e barra de progresso)
+  if (usuarioLogado.meta && usuarioLogado.meta > 0) {
+    const atual = usuarioLogado.saldo;
+    const procent = Math.max(0, Math.min(100, Math.round((atual / usuarioLogado.meta) * 100)));
+
+    metaValorEl.innerHTML = `
+      <p><strong>Meta: R$ ${usuarioLogado.meta.toFixed(2).replace('.', ',')}</strong></p>
+      <p>Progresso: R$ ${atual.toFixed(2).replace('.', ',')} / R$ ${usuarioLogado.meta.toFixed(2).replace('.', ',')}</p>
+      <div class="progresso-barra">
+        <div class="preenchimento" style="width: ${procent}%">${procent}%</div>
+      </div>
+    `;
+  } else {
+    metaValorEl.innerHTML = '<p>Faça sua meta!</p><div class="progresso-barra"><div class="preenchimento" style="width:0"></div></div>';
+  }
 }
 
+function excluirMovimentacao(id) {
+  usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado")) || usuarioLogado;
+  const idx = usuarioLogado.movimentacoes.findIndex(m => m.id === id);
+  if (idx === -1) return;
+
+  // remove do array de movimentações
+  usuarioLogado.movimentacoes.splice(idx, 1);
+
+  // recalcula o saldo a partir das movimentações (evita inconsistências)
+  usuarioLogado.saldo = usuarioLogado.movimentacoes.reduce((acc, m) => {
+    if (m.tipo === "entrada" || m.tipo === "rendaExtra") return acc + m.valor;
+    if (m.tipo === "saida") return acc - m.valor;
+    return acc;
+  }, 0);
+
+  // atualiza localStorage do usuário logado
+  localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+
+  // atualiza lista global de usuários
+  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+  usuarios = usuarios.map(u => (u.email === usuarioLogado.email ? usuarioLogado : u));
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+  // atualiza UI
+  mostrarMensagem(tabelaCorpo, "Movimentação excluída com sucesso!", "sucesso");
+  renderizarTabela(usuarioLogado.movimentacoes);
+  atualizarDashboard();
+}
 
 btnSalvarMeta.addEventListener("click", () => {
   const valor = parseFloat(inputValorMeta.value);
@@ -285,3 +397,4 @@ btnLogout.addEventListener("click", () => {
 
 atualizarDashboard();
 renderizarTabela(usuarioLogado.movimentacoes);
+
